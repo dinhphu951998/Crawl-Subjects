@@ -18,6 +18,7 @@ A JavaScript script to crawl and extract subject information from HCMUT (Ho Chi 
 1. Open the HCMUT course registration page in your browser
 2. Open the browser's Developer Console (F12 or Right-click → Inspect → Console)
 3. Ensure jQuery is available on the page (the script uses `$`)
+4. You must search (load) all subjects so that they are visible on the page
 
 ### Basic Usage
 
