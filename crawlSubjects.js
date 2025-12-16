@@ -53,6 +53,8 @@ async function getSubjectTable(subject, id, waitTime) {
     // let table = $('#tkbLT' + id);
 
     const tableHtml = await fetchSubjectTable(id);
+    
+    await new Promise(resolve => setTimeout(resolve, waitTime * 1000));
 
     const rows = $(tableHtml).find('tr');
     const subjectDetails = []
