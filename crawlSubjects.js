@@ -12,16 +12,31 @@ function getImpSubjects(impCode = "im01") {
     return impSubjects.map(s => {return {code: s.code, name: s.name, credit: s.credit, ...s.subjectDetails.find(sd => sd.group.toLowerCase().includes(impCode))}}).sort((a, b) => a.code.localeCompare(b.code));
 }
 
+function searchSubjects(searchValue) {
+    const items = { ... localStorage };
+    const values = Object.values(items);
+    const subjects = values.filter(s => s.toLowerCase().includes(searchValue.toLowerCase()));
+    return subjects.map(s => JSON.parse(s));
+}
+
+function getNormString(text) {
+    text = text.replace(/"/g, '')
+    text = text.replace(/[\r\n\t]/g, ' ')
+    text = text.replace(/\s+/g, ' ')
+    
+    return decodeURIComponent(text.trim()).normalize("NFC")
+}
+
 function getAdditionalData(additionalRow) {
     const table = $(additionalRow).find('table')
     const rows = $(table).find('tr')
     if (rows.length == 2) {
         const cells = $(rows).eq(1).find('td')
-        const dayOfWeek = $(cells).eq(0).text().trim()
-        const slot = $(cells).eq(1).text().replace(/[\r\n\t]/g, ' ').replace(/\s+/g, ' ').trim()
-        const room = $(cells).eq(2).text().trim()
-        const branch = $(cells).eq(3).text().trim()
-        const weeks = $(cells).eq(4).text().replace(/[\r\n\t]/g, ' ').replace(/\s+/g, ' ').trim()
+        const dayOfWeek = getNormString($(cells).eq(0).text())
+        const slot = getNormString($(cells).eq(1).text())
+        const room = getNormString($(cells).eq(2).text())
+        const branch = getNormString($(cells).eq(3).text())
+        const weeks = getNormString($(cells).eq(4).text())
         
         return {
             dayOfWeek,
@@ -63,10 +78,10 @@ async function getSubjectTable(subject, id, waitTime) {
             continue;
         }
         const cells = $(row).find('td')
-        const group = $(cells).eq(0).text().trim()
-        const size = $(cells).eq(1).text().trim()
-        const language = $(cells).eq(2).text().trim()
-        const teacher = $(cells).eq(4).text().trim().replace(/"/g, '')
+        const group = getNormString($(cells).eq(0).text())
+        const size = getNormString($(cells).eq(1).text())
+        const language = getNormString($(cells).eq(2).text())
+        const teacher = getNormString($(cells).eq(4).text())
         let detail = {
             group,
             size,
